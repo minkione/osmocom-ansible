@@ -47,6 +47,7 @@
       - pkg-config
       - make 
       - libmpfr-dev 
+      - libmpfr4
       - libmpc-dev
       - libtalloc-dev
       - libfftw3-dev
@@ -58,7 +59,7 @@
       - automake
       - linux-headers-4.15.0-kali2-all-amd64
       - alsa-oss
-      
+
 # Add source repository into sources list.
   - apt_repository:
       repo: deb http://old.kali.org/kali sana main non-free contrib
@@ -111,7 +112,16 @@
   
   - name: texinfo
     shell: cd  /root && wget http://ftp.gnu.org/gnu/texinfo/texinfo-4.13.tar.gz && gzip -dc < texinfo-4.13.tar.gz | tar -xf - && cd texinfo-4.13 && ./configure && make
-      
+  
+  - name: gnuarm
+    shell: cd /root && mkdir gnuarm
+
+  - name: download cross-compiler sources
+    shell: cd /root/gnuarm && mkdir build install src && cd src/ && wget http://ftp.gnu.org/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2 && wget http://ftp.gnu.org/gnu/binutils/binutils-2.21.1a.tar.bz2 && wget ftp://sources.redhat.com/pub/newlib/newlib-1.19.0.tar.gz
+  
+  - name: download cross-compiler-script & install
+    shell: cd /root && git clone https://github.com/bbaranoff/osmocom-ansible && cp osmocom-ansible/gnu-arm-build.3.sh /root/gnuarm/gnu-arm-build.3.sh && cd /root/gnuarm/ && chmod +x gnu-arm-build.3.sh && ./gnu-arm-build.3.sh && export PATH=$PATH:/root/gnuarm/install/bin
+    
   - name: libosmocore
     shell: cd /root && git clone git://git.osmocom.org/libosmocore.git && cd /root/libosmocore && autoreconf -i && ./configure && make && make install && ldconfig
 
