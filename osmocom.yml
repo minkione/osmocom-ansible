@@ -1,0 +1,161 @@
+- hosts: localhost
+  remote_user: root
+  vars:
+    debug_params:
+      msg: "hello there"
+  tasks:
+
+  - name: Update APT package cache
+    apt: update_cache=yes cache_valid_time=600
+
+  - name: Upgrade APT to the latest packages
+    apt: upgrade=dist
+    register: apt_result
+
+  - name: Autoremove unused packages
+    command: apt-get -y autoremove
+    register: apt_result
+    changed_when: "'packages will be REMOVED' in apt_result.stdout"
+
+  - name: Purge residual kernel packages
+    shell: apt-get remove -y --purge $(dpkg -l | grep "^rc\s*linux-image-" | awk '{print $2}' | tr '\n' ' ')
+    register: apt_result
+    changed_when: "'packages will be REMOVED' in apt_result.stdout"
+
+  - name: install basic packages
+    action: >
+      {{ ansible_pkg_mgr }} name={{ item }} state=present update_cache=yes
+    with_items:
+      - build-essential 
+      - libgmp-dev
+      - libx11-6 
+      - libx11-dev
+      - flex
+      - libncurses5 
+      - libncurses5-dev
+      - libncursesw5 
+      - libpcsclite-dev
+      - zlib1g-dev 
+      - libmpc3 
+      - lemon 
+      - aptitude 
+      - libtinfo-dev
+      - libtool
+      - shtool 
+      - autoconf 
+      - git-core
+      - pkg-config
+      - make 
+      - libmpfr-dev 
+      - libmpc-dev
+      - libtalloc-dev
+      - libfftw3-dev
+      - libgnutls28-dev 
+      - libssl1.0-dev 
+      - osmo-bts
+      - osmocom-nitb
+      - libxml2-dev
+      - automake
+      - linux-headers-4.15.0-kali2-all-amd64
+      - alsa-oss
+      - gcc-arm-none-eabi
+
+# Add source repository into sources list.
+  - apt_repository:
+      repo: deb http://old.kali.org/kali sana main non-free contrib
+      state: present
+     
+  - name: gcc-4.9
+    apt:
+      name: gcc-4.9
+      state: present
+
+  - name: g++-4.9
+    apt:
+      name: g++-4.9
+      state: present
+  
+  - apt_repository:
+      repo: deb http://old.kali.org/kali sana main non-free contrib
+      state: absent
+  
+  - name: gcc-version_4.9
+    shell: update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 10
+
+  - name: gcc-version_7
+    shell: update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 20
+
+  - name: g++-version_4.9
+    shell: update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 10
+
+  - name: g++-version_7
+    shell: update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 20
+ 
+  - name: config_gcc_1
+    shell:  update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 30
+    register: apt_result
+
+  - name: config_gcc_2
+    shell:  update-alternatives --set cc /usr/bin/gcc
+
+  - name: config_g++_1
+    shell: update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 30
+
+  - name: config_g++_2
+    shell:  update-alternatives --set c++ /usr/bin/g++
+
+  - name: config_gcc
+    shell: update-alternatives --set gcc "/usr/bin/gcc-4.9"
+  
+  - name: config_g++
+    shell: update-alternatives --set g++ "/usr/bin/g++-4.9" 
+  
+  - name: texinfo
+    shell: cd  /root && wget http://ftp.gnu.org/gnu/texinfo/texinfo-4.13.tar.gz && gzip -dc < texinfo-4.13.tar.gz | tar -xf - && cd texinfo-4.13 && ./configure && make
+      
+  - name: libosmocore
+    shell: cd /root && git clone git://git.osmocom.org/libosmocore.git && cd /root/libosmocore && autoreconf -i && ./configure && make && make install && ldconfig
+
+  - name: libosmo-dsp
+    shell: cd /root && git clone git://git.osmocom.org/libosmo-dsp.git && cd libosmo-dsp && autoreconf -i && ./configure && make && make install && ldconfig
+
+  - name: osmocombb-trx
+    shell: cd /root && export PATH=$PATH:/root/gnuarm/install/bin && git clone git://git.osmocom.org/osmocom-bb.git trx && cd trx && git checkout jolly/testing && cp /root/osmocom-ansible/Makefile /root/trx/src/target/firmware/Makefile && cd src && make HOST_layer23_CONFARGS=--enable-transceiver && make install
+
+  - name: asterisk
+    shell: cd /root && git clone https://github.com/bastienbaranoff/imsi-catcher && wget https://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-1.8.13.1.tar.gz && gzip -dc <  asterisk-1.8.13.1.tar.gz | tar -xf - && cp /root/imsi-catcher/tcptls.c /root/asterisk-1.8.13.1/main/tcptls.c && cd /root/asterisk-1.8.13.1 && ./configure && make && make install && cp ~/imsi-catcher/asterisk/ /etc/asterisk/
+
+  - apt_repository:
+      repo: deb http://old.kali.org/kali moto main non-free contrib
+      state: present
+
+  - apt_repository:
+      repo: deb http://http.kali.org/kali kali-rolling main non-free contrib
+      state: absent
+
+  - name: asterisk-dev
+    apt:
+      name: asterisk-dev
+      state: present
+
+  - apt_repository:
+      repo: deb http://old.kali.org/kali moto main non-free contrib
+      state: absent
+
+  - apt_repository:
+      repo: deb http://http.kali.org/kali kali-rolling main non-free contrib
+      state: present
+
+  - name : sofia-sip
+    shell: cd /root && git clone https://github.com/davehorton/sofia-sip && cd sofia-sip && ./configure &&make && make install && ldconfig
+
+  - name: opencore-amr
+    shell: cd /root && git clone https://github.com/VFR-maniac/opencore-amr && cd opencore-amr && ./configure &&make && make install && ldconfig
+ 
+  - name: mISDN
+    shell: rm -Rf /lib/modules/$(uname -r)/kernel/drivers/isdn/hardware/mISDN && rm -Rf /lib/modules/$(uname -r)/kernel/drivers/isdn/mISDN/  && depmod -a && cd /root/ git clone https://github.com/b1-systems/mISDN/ && git clone https://github.com/b1-systems/mISDNuser/ && cd mISDN &&  aclocal && automake --add-missing && ./configure && cp mISDN.cfg.default standalone/mISDN.cfg && make modules && make modules_install && depmod -a && cd ../mISDNuser && make && ./configure && make && make install && cd example && make 
+
+  - name: lcr
+    shell: cd /root && git clone https://github.com/fairwaves/lcr && cd lcr &&  autoreconf -i && ./configure --with-sip --with-gsm-bs --with-gsm-ms --enable-gsmhr --with-asterisk && make && make install && ldconfig && cp chan_lcr.so /usr/lib/asterisk/modules/ && cp /root/imsi-catcher/directory.list /usr/local/etc/lcr/ && cp /root/imsi-catcher/interface.conf /usr/local/etc/lcr/ && cp /root/imsi-catcher/options.conf /usr/local/etc/lcr/ && cp /root/imsi-catcher/routing.conf /usr/local/etc/lcr/ && mkdir /root/.osmocom && cp /root/imsi-catcher/open-bsc.cfg /root/.osmocom/ && cp /root/imsi-catcher/osmo-bts.cfg /root/.osmocom/
+
+
