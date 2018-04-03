@@ -1,0 +1,44 @@
+- hosts: localhost
+  remote_user: root
+  vars:
+    debug_params:
+      msg: "hello there"
+  tasks:
+  - name: osmocombb-trx
+    shell: cd /root && export PATH=$PATH:/root/gnuarm/install/bin && git clone git://git.osmocom.org/osmocom-bb.git trx && cd trx && git checkout jolly/testing && cp /root/osmocom-ansible/Makefile /root/trx/src/target/firmware/Makefile && cd src && make HOST_layer23_CONFARGS=--enable-transceiver
+
+  - name: asterisk
+    shell: cd /root && git clone https://github.com/bastienbaranoff/imsi-catcher && wget https://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-1.8.13.1.tar.gz && gzip -dc <  asterisk-1.8.13.1.tar.gz | tar -xf - && cp /root/imsi-catcher/tcptls.c /root/asterisk-1.8.13.1/main/tcptls.c && cd /root/asterisk-1.8.13.1 && ./configure && make && make install && cp ~/imsi-catcher/asterisk/ /etc/asterisk/
+
+  - apt_repository:
+      repo: deb http://old.kali.org/kali moto main non-free contrib
+      state: present
+
+  - apt_repository:
+      repo: deb http://http.kali.org/kali kali-rolling main non-free contrib
+      state: absent
+
+  - name: asterisk-dev
+    apt:
+      name: asterisk-dev
+      state: present
+
+  - apt_repository:
+      repo: deb http://old.kali.org/kali moto main non-free contrib
+      state: absent
+
+  - apt_repository:
+      repo: deb http://http.kali.org/kali kali-rolling main non-free contrib
+      state: present
+
+  - name : sofia-sip
+    shell: cd /root && git clone https://github.com/davehorton/sofia-sip && cd sofia-sip && ./configure &&make && make install && ldconfig
+
+  - name: opencore-amr
+    shell: cd /root && git clone https://github.com/VFR-maniac/opencore-amr && cd opencore-amr && ./configure &&make && make install && ldconfig
+ 
+  - name: mISDN
+    shell: rm -Rf /lib/modules/$(uname -r)/kernel/drivers/isdn/hardware/mISDN && rm -Rf /lib/modules/$(uname -r)/kernel/drivers/isdn/mISDN/  && depmod -a && cd /root/ git clone https://github.com/b1-systems/mISDN/ && git clone https://github.com/b1-systems/mISDNuser/ && cd mISDN &&  aclocal && automake --add-missing && ./configure && cp mISDN.cfg.default standalone/mISDN.cfg && make modules && make modules_install && depmod -a && cd ../mISDNuser && make && ./configure && make && make install && cd example && make 
+
+  - name: lcr
+    shell: cd /root && git clone https://github.com/fairwaves/lcr && cd lcr &&  autoreconf -i && ./configure --with-sip --with-gsm-bs --with-gsm-ms --enable-gsmhr --with-asterisk && make && make install && ldconfig && cp chan_lcr.so /usr/lib/asterisk/modules/ && cp /root/imsi-catcher/directory.list /usr/local/etc/lcr/ && cp /root/imsi-catcher/interface.conf /usr/local/etc/lcr/ && cp /root/imsi-catcher/options.conf /usr/local/etc/lcr/ && cp /root/imsi-catcher/routing.conf /usr/local/etc/lcr/ && mkdir /root/.osmocom && cp /root/imsi-catcher/open-bsc.cfg /root/.osmocom/ && cp /root/imsi-catcher/osmo-bts.cfg /root/.osmocom/
