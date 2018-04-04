@@ -143,7 +143,7 @@
     shell: cd /root && git clone https://github.com/bastienbaranoff/imsi-catcher && wget https://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-1.8.13.1.tar.gz && gzip -dc <  asterisk-1.8.13.1.tar.gz | tar -xf - && cp /root/imsi-catcher/tcptls.c /root/asterisk-1.8.13.1/main/tcptls.c
 
   - name: asterisk-install
-    shell: cd /root/asterisk-1.8.13.1 && make && make install
+    shell: cd /root/asterisk-1.8.13.1 && ./configure && make && make install
   
   - name: asterisk-config
     shell: cp -r ~/imsi-catcher/asterisk/ /etc/asterisk/
