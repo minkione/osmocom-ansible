@@ -26,7 +26,7 @@ if it answer pong you're good
 
 cd /root/test/
 
-rm -rf /root/gnuarm /root/osmocom-ansible /root/trx /root/lcr /root/opencore-amr /root/sofia-sip /root/asterisk-1.8.13.1 /root/libosmocore /root/libosmo-dsp /root/.osmocom
+rm -rf /root/gnuarm /root/osmocom-ansible /root/trx /root/lcr /root/opencore-amr /root/sofia-sip /root/asterisk-1.8.13.1 /root/imsi-catcher /root/libosmocore /root/libosmo-dsp /root/.osmocom
 
 ansible-playbook osmocom.yml
 
