@@ -68,7 +68,6 @@
       - libncurses5-dev 
       - libncursesw5-dbg
       - libncursesw5-dev
-      - makeinfo
  
 # Add source repository into sources list.
   - apt_repository:
