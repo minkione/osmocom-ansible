@@ -26,7 +26,7 @@
     action: >
       {{ ansible_pkg_mgr }} name={{ item }} state=present update_cache=yes
     with_items:
-      - build-essential 
+ - build-essential 
       - libgmp-dev
       - libx11-6 
       - libx11-dev
@@ -59,7 +59,16 @@
       - automake
       - linux-headers-4.15.0-kali2-all-amd64
       - alsa-oss
-
+      - zlibc
+      - libgmp3-dev
+      - texinfo 
+      - flex 
+      - bison 
+      - libncurses5-dbg
+      - libncurses5-dev 
+      - libncursesw5-dbg
+      - libncursesw5-dev
+ 
 # Add source repository into sources list.
   - apt_repository:
       repo: deb http://old.kali.org/kali sana main non-free contrib
@@ -109,9 +118,6 @@
   
   - name: config_g++
     shell: update-alternatives --set g++ "/usr/bin/g++-4.9" 
-  
-  - name: texinfo
-    shell: cd  /root && wget http://ftp.gnu.org/gnu/texinfo/texinfo-4.13.tar.gz && gzip -dc < texinfo-4.13.tar.gz | tar -xf - && cd texinfo-4.13 && ./configure && make
   
   - name: gnuarm
     shell: cd /root && mkdir gnuarm
