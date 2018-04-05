@@ -128,7 +128,7 @@
     shell: cd /root/gnuarm && ./download.sh
 
   - name: build cross compiler
-    shell: ./build.sh
+    shell: cd /root/gnuarm && ./build.sh
 
   - name: libosmocore
     shell: rm -rf /root/libosmocore && cd /root && git clone git://git.osmocom.org/libosmocore.git && cd /root/libosmocore && autoreconf -i && ./configure && make && make install && ldconfig
