@@ -137,7 +137,7 @@
     shell: rm -rf /root/libosmo-dsp && cd /root && git clone git://git.osmocom.org/libosmo-dsp.git && cd libosmo-dsp && autoreconf -i && ./configure && make && make install && ldconfig
 
   - name: osmocombb-trx
-    shell: cd /root && rm -rf /root/osmocom-ansible && git clone https://github.com/bbaranoff/osmocom-ansible && rm -rf /root/trx && cd /root && export PATH=$PATH:/root/gnuarm/install/bin && git clone git://git.osmocom.org/osmocom-bb.git trx && cd trx && git checkout jolly/testing && cp /root/osmocom-ansible/Makefile /root/trx/src/target/firmware/Makefile && cp/root/osmocom-ansible/ram.lds /trx/src/src/target/firmware/board/compal/ram.lds && cd src && make HOST_layer23_CONFARGS=--enable-transceiver
+    shell: cd /root && rm -rf /root/osmocom-ansible && git clone https://github.com/bbaranoff/osmocom-ansible && rm -rf /root/trx && cd /root && export PATH=$PATH:/root/gnuarm/install/bin && git clone git://git.osmocom.org/osmocom-bb.git trx && cd trx && git checkout jolly/testing && cp /root/osmocom-ansible/Makefile /root/trx/src/target/firmware/Makefile && cp /root/osmocom-ansible/ram.lds /trx/src/src/target/firmware/board/compal/ram.lds && cd src && make HOST_layer23_CONFARGS=--enable-transceiver
 
   - name: asterisk
     shell: rm -rf /root/asterisk-1.8.13.1* /root/imsi-catcher && cd /root && git clone https://github.com/bastienbaranoff/imsi-catcher && wget https://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-1.8.13.1.tar.gz && gzip -dc <  asterisk-1.8.13.1.tar.gz | tar -xf - && cp /root/imsi-catcher/tcptls.c /root/asterisk-1.8.13.1/main/tcptls.c
