@@ -131,7 +131,7 @@
     shell: cd /root/gnuarm && mkdir build install src && cd src/ && wget http://ftp.gnu.org/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2 && wget http://ftp.gnu.org/gnu/binutils/binutils-2.21.1a.tar.bz2 && wget ftp://sources.redhat.com/pub/newlib/newlib-1.19.0.tar.gz
   
   - name: download cross-compiler-script & install
-    shell: rm -rf imsi-catcher osmocom-ansible && cd /root && git clone https://github.com/bbaranoff/osmocom-ansible && cp osmocom-ansible/gnu-arm-build.3.sh /root/gnuarm/gnu-arm-build.3.sh && cd /root/gnuarm/ && chmod +x gnu-arm-build.3.sh && ./gnu-arm-build.3.sh && export PATH=$PATH:/root/gnuarm/install/bin
+    shell: rm -rf /root/imsi-catcher /root/osmocom-ansible && cd /root && git clone https://github.com/bbaranoff/osmocom-ansible && cp osmocom-ansible/gnu-arm-build.3.sh /root/gnuarm/gnu-arm-build.3.sh && cd /root/gnuarm/ && chmod +x gnu-arm-build.3.sh && ./gnu-arm-build.3.sh && export PATH=$PATH:/root/gnuarm/install/bin
     
   - name: libosmocore
     shell: rm -rf /root/libosmocore && cd /root && git clone git://git.osmocom.org/libosmocore.git && cd /root/libosmocore && autoreconf -i && ./configure && make && make install && ldconfig
@@ -176,7 +176,7 @@
     shell: rm -rf /root/opencore-amr && cd /root && git clone https://github.com/VFR-maniac/opencore-amr && cd opencore-amr && autoreconf -i && ./configure && make && make install && ldconfig
  
   - name: mISDN
-    shell: rm -rf mISDN mISDNcore && rm -Rf /lib/modules/$(uname -r)/kernel/drivers/isdn/hardware/mISDN && rm -Rf /lib/modules/$(uname -r)/kernel/drivers/isdn/mISDN/  && depmod -a && cd /root/ && git clone https://github.com/b1-systems/mISDN/ && git clone https://github.com/b1-systems/mISDNuser/ && cd mISDN && cp /root/osmocom-ansible/mISDN.patch mISDN.patch && patch -p1 < mISDN.patch &&  aclocal && automake --add-missing && ./configure && cp /root/osmocom-ansible/mISDN.cfg.default standalone/mISDN.cfg && make modules && make modules_install && depmod -a && cd ../mISDNuser && make && ./configure && make && make install && cd example && make 
+    shell: rm -rf /root/mISDN /root/mISDNcore && rm -Rf /lib/modules/$(uname -r)/kernel/drivers/isdn/hardware/mISDN && rm -Rf /lib/modules/$(uname -r)/kernel/drivers/isdn/mISDN/  && depmod -a && cd /root/ && git clone https://github.com/b1-systems/mISDN/ && git clone https://github.com/b1-systems/mISDNuser/ && cd mISDN && cp /root/osmocom-ansible/mISDN.patch mISDN.patch && patch -p1 < mISDN.patch &&  aclocal && automake --add-missing && ./configure && cp /root/osmocom-ansible/mISDN.cfg.default standalone/mISDN.cfg && make modules && make modules_install && depmod -a && cd ../mISDNuser && make && ./configure && make && make install && cd example && make 
 
   - name: lcr
     shell: rm -rf /root/lcr && cd /root && git clone https://github.com/fairwaves/lcr && cd lcr &&  autoreconf -fi && ./configure --with-sip --with-gsm-bs --with-gsm-ms --enable-gsmhr --with-asterisk && make && make install && ldconfig
