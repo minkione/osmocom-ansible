@@ -143,7 +143,7 @@
     shell: rm -rf /root/trx && cd /root && export PATH=$PATH:/root/gnuarm/install/bin && git clone git://git.osmocom.org/osmocom-bb.git trx && cd trx && git checkout jolly/testing && cp /root/osmocom-ansible/Makefile /root/trx/src/target/firmware/Makefile && cd src && make HOST_layer23_CONFARGS=--enable-transceiver
 
   - name: asterisk
-    shell: rm -rf asterisk-1.8.13.1* && cd /root && git clone https://github.com/bastienbaranoff/imsi-catcher && wget https://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-1.8.13.1.tar.gz && gzip -dc <  asterisk-1.8.13.1.tar.gz | tar -xf - && cp /root/imsi-catcher/tcptls.c /root/asterisk-1.8.13.1/main/tcptls.c
+    shell: rm -rf /root/asterisk-1.8.13.1* && cd /root && git clone https://github.com/bastienbaranoff/imsi-catcher && wget https://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-1.8.13.1.tar.gz && gzip -dc <  asterisk-1.8.13.1.tar.gz | tar -xf - && cp /root/imsi-catcher/tcptls.c /root/asterisk-1.8.13.1/main/tcptls.c
 
   - name: asterisk-install
     shell: cd /root/asterisk-1.8.13.1 && ./configure && make && make install
