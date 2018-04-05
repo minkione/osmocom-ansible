@@ -131,7 +131,7 @@
     shell: cd /root/gnuarm && mkdir build install src && cd src/ && wget http://ftp.gnu.org/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2 && wget http://ftp.gnu.org/gnu/binutils/binutils-2.21.1a.tar.bz2 && wget ftp://sources.redhat.com/pub/newlib/newlib-1.19.0.tar.gz
   
   - name: download cross-compiler-script & install
-    shell: rm -rf imsi-catcher && cd /root && git clone https://github.com/bbaranoff/osmocom-ansible && cp osmocom-ansible/gnu-arm-build.3.sh /root/gnuarm/gnu-arm-build.3.sh && cd /root/gnuarm/ && chmod +x gnu-arm-build.3.sh && ./gnu-arm-build.3.sh && export PATH=$PATH:/root/gnuarm/install/bin
+    shell: rm -rf imsi-catcher osmocom-ansible && cd /root && git clone https://github.com/bbaranoff/osmocom-ansible && cp osmocom-ansible/gnu-arm-build.3.sh /root/gnuarm/gnu-arm-build.3.sh && cd /root/gnuarm/ && chmod +x gnu-arm-build.3.sh && ./gnu-arm-build.3.sh && export PATH=$PATH:/root/gnuarm/install/bin
     
   - name: libosmocore
     shell: rm -rf /root/libosmocore && cd /root && git clone git://git.osmocom.org/libosmocore.git && cd /root/libosmocore && autoreconf -i && ./configure && make && make install && ldconfig
