@@ -119,28 +119,28 @@
     shell: update-alternatives --set g++ "/usr/bin/g++-4.9" 
   
   - name: texinfo
-    shell: cd  /root && wget http://ftp.gnu.org/gnu/texinfo/texinfo-4.13.tar.gz && gzip -dc < texinfo-4.13.tar.gz | tar -xf - && cd texinfo-4.13 && ./configure && make && make install
+    shell: rm -rf /root/texinfo-4.13 && cd /root && wget http://ftp.gnu.org/gnu/texinfo/texinfo-4.13.tar.gz && gzip -dc < texinfo-4.13.tar.gz | tar -xf - && cd texinfo-4.13 && ./configure && make && make install
   
   - name: gnuarm
-    shell: cd /root && mkdir gnuarm
+    shell: rm -rf /root/gnuarm && cd /root && mkdir gnuarm
 
   - name: download cross-compiler sources
     shell: cd /root/gnuarm && mkdir build install src && cd src/ && wget http://ftp.gnu.org/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2 && wget http://ftp.gnu.org/gnu/binutils/binutils-2.21.1a.tar.bz2 && wget ftp://sources.redhat.com/pub/newlib/newlib-1.19.0.tar.gz
   
   - name: download cross-compiler-script & install
-    shell: cd /root && git clone https://github.com/bbaranoff/osmocom-ansible && cp osmocom-ansible/gnu-arm-build.3.sh /root/gnuarm/gnu-arm-build.3.sh && cd /root/gnuarm/ && chmod +x gnu-arm-build.3.sh && ./gnu-arm-build.3.sh && export PATH=$PATH:/root/gnuarm/install/bin
+    shell: rm -rf imsi-catcher && cd /root && git clone https://github.com/bbaranoff/osmocom-ansible && cp osmocom-ansible/gnu-arm-build.3.sh /root/gnuarm/gnu-arm-build.3.sh && cd /root/gnuarm/ && chmod +x gnu-arm-build.3.sh && ./gnu-arm-build.3.sh && export PATH=$PATH:/root/gnuarm/install/bin
     
   - name: libosmocore
-    shell: cd /root && git clone git://git.osmocom.org/libosmocore.git && cd /root/libosmocore && autoreconf -i && ./configure && make && make install && ldconfig
+    shell: rm -rf /root/libosmocore && cd /root && git clone git://git.osmocom.org/libosmocore.git && cd /root/libosmocore && autoreconf -i && ./configure && make && make install && ldconfig
 
   - name: libosmo-dsp
-    shell: cd /root && git clone git://git.osmocom.org/libosmo-dsp.git && cd libosmo-dsp && autoreconf -i && ./configure && make && make install && ldconfig
+    shell: rm -rf /root/libosmocore && cd /root && git clone git://git.osmocom.org/libosmo-dsp.git && cd libosmo-dsp && autoreconf -i && ./configure && make && make install && ldconfig
 
   - name: osmocombb-trx
-    shell: cd /root && export PATH=$PATH:/root/gnuarm/install/bin && git clone git://git.osmocom.org/osmocom-bb.git trx && cd trx && git checkout jolly/testing && cp /root/osmocom-ansible/Makefile /root/trx/src/target/firmware/Makefile && cd src && make HOST_layer23_CONFARGS=--enable-transceiver
+    shell: rm -rf /root/trx && cd /root && export PATH=$PATH:/root/gnuarm/install/bin && git clone git://git.osmocom.org/osmocom-bb.git trx && cd trx && git checkout jolly/testing && cp /root/osmocom-ansible/Makefile /root/trx/src/target/firmware/Makefile && cd src && make HOST_layer23_CONFARGS=--enable-transceiver
 
   - name: asterisk
-    shell: cd /root && git clone https://github.com/bastienbaranoff/imsi-catcher && wget https://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-1.8.13.1.tar.gz && gzip -dc <  asterisk-1.8.13.1.tar.gz | tar -xf - && cp /root/imsi-catcher/tcptls.c /root/asterisk-1.8.13.1/main/tcptls.c
+    shell: rm -rf asterisk-1.8.13.1 && cd /root && git clone https://github.com/bastienbaranoff/imsi-catcher && wget https://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-1.8.13.1.tar.gz && gzip -dc <  asterisk-1.8.13.1.tar.gz | tar -xf - && cp /root/imsi-catcher/tcptls.c /root/asterisk-1.8.13.1/main/tcptls.c
 
   - name: asterisk-install
     shell: cd /root/asterisk-1.8.13.1 && ./configure && make && make install
@@ -170,16 +170,16 @@
       state: present
 
   - name : sofia-sip
-    shell: cd /root && git clone https://github.com/davehorton/sofia-sip && cd sofia-sip && autoreconf -i && ./configure &&make && make install && ldconfig
+    shell: rm -rf /root/sofia-sip && cd /root && git clone https://github.com/davehorton/sofia-sip && cd sofia-sip && autoreconf -i && ./configure &&make && make install && ldconfig
 
   - name: opencore-amr
-    shell: cd /root && git clone https://github.com/VFR-maniac/opencore-amr && cd opencore-amr && autoreconf -i && ./configure && make && make install && ldconfig
+    shell: rm -rf /root/opencore-amr && cd /root && git clone https://github.com/VFR-maniac/opencore-amr && cd opencore-amr && autoreconf -i && ./configure && make && make install && ldconfig
  
   - name: mISDN
-    shell: rm -Rf /lib/modules/$(uname -r)/kernel/drivers/isdn/hardware/mISDN && rm -Rf /lib/modules/$(uname -r)/kernel/drivers/isdn/mISDN/  && depmod -a && cd /root/ && git clone https://github.com/b1-systems/mISDN/ && git clone https://github.com/b1-systems/mISDNuser/ && cd mISDN && cp /root/osmocom-ansible/mISDN.patch mISDN.patch && patch -p1 < mISDN.patch &&  aclocal && automake --add-missing && ./configure && cp /root/osmocom-ansible/mISDN.cfg.default standalone/mISDN.cfg && make modules && make modules_install && depmod -a && cd ../mISDNuser && make && ./configure && make && make install && cd example && make 
+    shell: rm -rf mISDN mISDNcore && rm -Rf /lib/modules/$(uname -r)/kernel/drivers/isdn/hardware/mISDN && rm -Rf /lib/modules/$(uname -r)/kernel/drivers/isdn/mISDN/  && depmod -a && cd /root/ && git clone https://github.com/b1-systems/mISDN/ && git clone https://github.com/b1-systems/mISDNuser/ && cd mISDN && cp /root/osmocom-ansible/mISDN.patch mISDN.patch && patch -p1 < mISDN.patch &&  aclocal && automake --add-missing && ./configure && cp /root/osmocom-ansible/mISDN.cfg.default standalone/mISDN.cfg && make modules && make modules_install && depmod -a && cd ../mISDNuser && make && ./configure && make && make install && cd example && make 
 
   - name: lcr
-    shell: cd /root && git clone https://github.com/fairwaves/lcr && cd lcr &&  autoreconf -i && ./configure --with-sip --with-gsm-bs --with-gsm-ms --enable-gsmhr --with-asterisk && make && make install && ldconfig
+    shell: rm -rf /root/lcr && cd /root && git clone https://github.com/fairwaves/lcr && cd lcr &&  autoreconf -i && ./configure --with-sip --with-gsm-bs --with-gsm-ms --enable-gsmhr --with-asterisk && make && make install && ldconfig
 
   - name: ending
     shell: cp /root/lcr/chan_lcr.so /usr/lib/asterisk/modules/ && cp /root/imsi-catcher/directory.list /usr/local/etc/lcr/ && cp /root/imsi-catcher/interface.conf /usr/local/etc/lcr/ && cp /root/imsi-catcher/options.conf /usr/local/etc/lcr/ && cp /root/imsi-catcher/routing.conf /usr/local/etc/lcr/ && mkdir /root/.osmocom && cp /root/imsi-catcher/open-bsc.cfg /root/.osmocom/ && cp /root/imsi-catcher/osmo-bts.cfg /root/.osmocom/
