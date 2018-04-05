@@ -137,7 +137,7 @@
     shell: rm -rf /root/libosmocore && cd /root && git clone git://git.osmocom.org/libosmocore.git && cd /root/libosmocore && autoreconf -i && ./configure && make && make install && ldconfig
 
   - name: libosmo-dsp
-    shell: rm -rf /root/libosmocore && cd /root && git clone git://git.osmocom.org/libosmo-dsp.git && cd libosmo-dsp && autoreconf -i && ./configure && make && make install && ldconfig
+    shell: rm -rf /root/libosmo-dsp && cd /root && git clone git://git.osmocom.org/libosmo-dsp.git && cd libosmo-dsp && autoreconf -i && ./configure && make && make install && ldconfig
 
   - name: osmocombb-trx
     shell: rm -rf /root/trx && cd /root && export PATH=$PATH:/root/gnuarm/install/bin && git clone git://git.osmocom.org/osmocom-bb.git trx && cd trx && git checkout jolly/testing && cp /root/osmocom-ansible/Makefile /root/trx/src/target/firmware/Makefile && cd src && make HOST_layer23_CONFARGS=--enable-transceiver
